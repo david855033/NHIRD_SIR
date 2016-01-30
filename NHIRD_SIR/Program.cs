@@ -12,9 +12,11 @@ namespace NHIRD
     {
         static void Main(string[] args)
         {
-            NHIRD_ArgTable argTable = new NHIRD_ArgTable("2010", 2000, 2013);
             string path = @"D:\Google Drive\NHIRD DRUG EXPOSURE ASTHMA\Raw Data\";
-            GetActionBasedData.CD(argTable.list_PrimaryActionBasedData_CD,
+            NHIRD_ArgTable argTable = new NHIRD_ArgTable("2010", 2000, 2013, path + @"OrderDefinition.csv");
+            GetActionBasedData.CD(argTable.databank_PrimaryActionBasedData_CD,
+                path + @"Primary\2010 Less then 1 yo CD.txt", argTable.list_OrderGroupDefinision.Count);
+            GetActionBasedData.OO(argTable.databank_PrimaryActionBasedData_CD,
                 path + @"Primary\2010 Less then 1 yo CD.txt", argTable.list_OrderGroupDefinision.Count);
 
             Console.WriteLine("End Of Program.");

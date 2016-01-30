@@ -1,1 +1,7 @@
 D:\文件\visual studio 2015\Projects\NHIRD_SIR\NHIRD_SIR\bin\Debug\NHIRD_SIR.exe.config
+D:\Github\NHIRD_SIR\NHIRD_SIR\bin\Debug\NHIRD_SIR.exe.config
+D:\Github\NHIRD_SIR\NHIRD_SIR\obj\Debug\NHIRD_SIR.csprojResolveAssemblyReference.cache
+D:\Github\NHIRD_SIR\NHIRD_SIR\bin\Debug\NHIRD_SIR.exe
+D:\Github\NHIRD_SIR\NHIRD_SIR\bin\Debug\NHIRD_SIR.pdb
+D:\Github\NHIRD_SIR\NHIRD_SIR\obj\Debug\NHIRD_SIR.exe
+D:\Github\NHIRD_SIR\NHIRD_SIR\obj\Debug\NHIRD_SIR.pdb

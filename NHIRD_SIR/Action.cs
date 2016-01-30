@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ namespace NHIRD.Actions
     static class GroupDefinition
     {
         /// <summary>
-        /// è¼‰å…¥ Orderç¾¤çµ„å®šç¾©
+        /// ¸ü¤J Order¸s²Õ©w¸q
         /// </summary>
         /// <param name="Args"></param>
         public static void initiallizeOrder(NHIRD_ArgTable Args)
@@ -32,11 +32,11 @@ namespace NHIRD.Actions
             Console.WriteLine(" - CD path: {0}", str_CDpath);
             ActionBasedData_CD = new List<List<NHIRD_DataTypes.ActionBasedData_CD>>();
 
-            //è®€å–CDæª”
+            //Åª¨úCDÀÉ
             int errorCount = 0;
             using (var sr = new StreamReader(str_CDpath))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_FEE_YM_index = title.FindIndex(x => x.IndexOf("FEE_YM") >= 0);
                 int int_HOSP_ID_index = title.FindIndex(x => x.IndexOf("HOSP_ID") >= 0);
@@ -48,7 +48,7 @@ namespace NHIRD.Actions
                 int int_Gender_index = title.FindIndex(x => x.IndexOf("ID_SEX") >= 0);
                 int int_ICD_index = title.FindIndex(x => x.IndexOf("ACODE_ICD9_1") >= 0);
                 int int_FuncType_index = title.FindIndex(x => x.IndexOf("FUNC_TYPE") >= 0);
-                // -- streamreader è¿´åœˆ
+                // -- streamreader °j°é
                 int datacount = 0;
                 while (!sr.EndOfStream)
                 {
@@ -64,7 +64,7 @@ namespace NHIRD.Actions
                     DataToAdd.str_Gender = SplitLine[int_Gender_index];
                     DataToAdd.array_ICD = new string[] { SplitLine[int_ICD_index], SplitLine[int_ICD_index + 1], SplitLine[int_ICD_index + 2] };
                     DataToAdd.str_FuncType = SplitLine[int_FuncType_index];
-                    //  ä½¿ç”¨ActionBasedData_OrderComparer ä¾åºå­˜å…¥ActionBasedData List
+                    //  ¨Ï¥ÎActionBasedData_OrderComparer ¨Ì§Ç¦s¤JActionBasedData List
                     int SearchIndex = ActionBasedData_CD.BinarySearch(
                        DataToAdd, new NHIRD_DataTypes.ActionBasedData_OrderComparer());
                     if (SearchIndex < 0)
@@ -83,7 +83,7 @@ namespace NHIRD.Actions
     }
     static class action
     {
-        // -- åˆå§‹åŒ– è¨ºæ–·ç¾¤çµ„
+        // -- ªì©l¤Æ ¶EÂ_¸s²Õ
         public static void Initialize_Secondary_Diagnosis(List<SecondDiagnosisGroup> list_second_Diagnosis_Group)
         {
             list_second_Diagnosis_Group.Add(new SecondDiagnosisGroup
@@ -104,12 +104,12 @@ namespace NHIRD.Actions
                 list_ICD9 = new List<string>() { "477" }
             });
         }
-        // -- è¼‰å…¥patient based data
+        // -- ¸ü¤Jpatient based data
         public static void Generate_patient_based_data(List<PatientBasedData> List_PatientBasedData, int int_second_diagnosis_group_count, string str_FilePath)
         {
             using (var sr = new StreamReader(str_FilePath))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_ID_index = title.FindIndex(x => x == "ID");
                 int int_Birthday_index = title.FindIndex(x => x.IndexOf("ID_BIRTHDAY") >= 0);
@@ -117,23 +117,23 @@ namespace NHIRD.Actions
                 int int_Gender_index = title.FindIndex(x => x.IndexOf("ID_SEX") >= 0);
                 int int_ICD_index = title.FindIndex(x => x.IndexOf("ACODE_ICD9_1") >= 0);
                 int int_FuncType_index = title.FindIndex(x => x.IndexOf("FUNC_TYPE") >= 0);
-                // -- Genital wartä¹‹è¨ºæ–·
+                // -- Genital wart¤§¶EÂ_
                 var ICDcrieteria_GenitalWart = new string[] { "07811" };
                 var ICDcriteria_Wart = new string[] { "0781" };
-                // -- streamreader è¿´åœˆ
+                // -- streamreader °j°é
                 while (sr.Peek() >= 0)
                 {
                     string[] str_currentline_split = sr.ReadLine().Split('\t');
                     string str_currentID = str_currentline_split[int_ID_index];
                     string str_currentBirthday = str_currentline_split[int_Birthday_index];
                     string str_currentFuncDate = str_currentline_split[int_FuncDate_index];
-                    if (Convert.ToInt32(str_currentFuncDate.Substring(0, 4)) < 2000) continue;  //***å¹´ä»½é™åˆ¶
+                    if (Convert.ToInt32(str_currentFuncDate.Substring(0, 4)) < 2000) continue;  //***¦~¥÷­­¨î
                     string str_currentGender = str_currentline_split[int_Gender_index];
                     string str_currentFuncType = str_currentline_split[int_FuncType_index];
                     string[] str_currentICDs = new string[] { str_currentline_split[int_ICD_index], str_currentline_split[int_ICD_index + 1], str_currentline_split[int_ICD_index + 2] };
-                    // ** æœå°‹
+                    // ** ·j´M
                     int int_BinarySearchResult = List_PatientBasedData.BinarySearch(new PatientBasedData { str_ID = str_currentID, str_Birthday = str_currentBirthday });
-                    if (int_BinarySearchResult < 0)   //æ–°è³‡æ–™
+                    if (int_BinarySearchResult < 0)   //·s¸ê®Æ
                     {
                         var new_PatientBasedData = new PatientBasedData
                         {
@@ -145,10 +145,10 @@ namespace NHIRD.Actions
                         };
                         List_PatientBasedData.Insert(-1 * int_BinarySearchResult - 1, new_PatientBasedData);
                     }
-                    else   //èˆŠè³‡æ–™
+                    else   //ÂÂ¸ê®Æ
                     {
-                        List_PatientBasedData[int_BinarySearchResult].str_FirstDate = str_currentFuncDate; //æ›´æ–°æœ€æ—©æ—¥æœŸ
-                        // è¨ˆç®—é–€è¨ºæ¬¡æ•¸
+                        List_PatientBasedData[int_BinarySearchResult].str_FirstDate = str_currentFuncDate; //§ó·s³Ì¦­¤é´Á
+                        // ­pºâªù¶E¦¸¼Æ
                         if (check_ICD(ICDcrieteria_GenitalWart, str_currentICDs))
                         {
                             List_PatientBasedData[int_BinarySearchResult].int_GW_OPDTimes++;
@@ -164,7 +164,7 @@ namespace NHIRD.Actions
                     }
                 }
             }
-            // -- å»ºç«‹PatientBasedDataå…§ secondary dianosisä¹‹å¯¦é«”ç‰©ä»¶
+            // -- «Ø¥ßPatientBasedData¤º secondary dianosis¤§¹êÅéª«¥ó
             foreach (var pt in List_PatientBasedData)
             {
                 for (int i = 0; i < int_second_diagnosis_group_count; i++)
@@ -175,22 +175,22 @@ namespace NHIRD.Actions
             }
 
         }
-        // -- ä½¿ç”¨åœ¨DDæŠ“ 2nd è¨ºæ–·
+        // -- ¨Ï¥Î¦bDD§ì 2nd ¶EÂ_
         public static void Check_Secondary_Diagnosis(List<SecondDiagnosisGroup> list_second_Diagnosis_Group, List<PatientBasedData> List_PatientBasedData, string str_FilePath)
         {
             using (var sr = new StreamReader(str_FilePath))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_ID_index = title.FindIndex(x => x == "ID");
                 int int_Birthday_index = title.FindIndex(x => x.IndexOf("ID_BIRTHDAY") >= 0);
                 int int_InDate_index = title.FindIndex(x => x.IndexOf("IN_DATE") >= 0);
                 int int_Gender_index = title.FindIndex(x => x.IndexOf("ID_SEX") >= 0);
                 int int_ICD_index = title.FindIndex(x => x.IndexOf("ICD9CM_CODE") >= 0);
-                // -- srä¹‹è¿´åœˆ
+                // -- sr¤§°j°é
                 while (sr.Peek() >= 0)
                 {
-                    // å»ºç«‹è©²è¡Œè³‡æ–™
+                    // «Ø¥ß¸Ó¦æ¸ê®Æ
                     string[] str_currentline_split = sr.ReadLine().Split('\t');
                     string str_currentID = str_currentline_split[int_ID_index];
                     string str_currentBirthday = str_currentline_split[int_Birthday_index];
@@ -202,10 +202,10 @@ namespace NHIRD.Actions
 
                     int int_BinarySearchResult = List_PatientBasedData.BinarySearch(new PatientBasedData { str_ID = str_currentID, str_Birthday = str_currentBirthday });
 
-                    //å„çµ„æ¬¡è¦è¨ºæ–·çš„è¿´åœˆ
+                    //¦U²Õ¦¸­n¶EÂ_ªº°j°é
                     for (int i = 0; i < list_second_Diagnosis_Group.Count; i++)
                     {
-                        //   æ ¸å°è©²çµ„ICD  ç¬¦åˆçš„è©±æ›´æ–°ç—…äººçš„ç¬¬ä¸€æ¬¡è¨ºæ–·æ™‚é–“
+                        //   ®Ö¹ï¸Ó²ÕICD  ²Å¦Xªº¸Ü§ó·s¯f¤Hªº²Ä¤@¦¸¶EÂ_®É¶¡
                         if (int_BinarySearchResult >= 0 && check_ICD(list_second_Diagnosis_Group[i].list_ICD9, str_currentICDs))
                         {
                             List_PatientBasedData[int_BinarySearchResult].array_secondDiagnosis[i].str_First_Date = str_currentInDate;
@@ -214,13 +214,13 @@ namespace NHIRD.Actions
                 }
             }
         }
-        // -- å–å¾—å¹´ç´€åˆ†å±¤å„çµ„äººæ•¸
+        // -- ¨ú±o¦~¬ö¤À¼h¦U²Õ¤H¼Æ
         public static void Summarize_Patient_AgeGrouped(List<PatientBasedData> List_PatientBasedData,
             List<SecondDiagnosisGroup> list_second_Diagnosis_Group,
             List<SumData> list_summarized_Patient_data,
             double db_Age_Start_Age, double db_Age_Group_interval, int int_Age_Group_count)
         {
-            //ä½¿ç”¨list_second_Diagnosis_Group åŠ age internvalåˆå§‹åŒ– Summarized_Patient_data_Group
+            //¨Ï¥Îlist_second_Diagnosis_Group ¤Î age internvalªì©l¤Æ Summarized_Patient_data_Group
 
             for (int i = 0; i < int_Age_Group_count; i++)
             {
@@ -229,15 +229,15 @@ namespace NHIRD.Actions
                 list_summarized_Patient_data[i].db_Age_Upper_Limit = db_Age_Group_interval * (i + 1) + db_Age_Start_Age;
             }
 
-            //é–‹å§‹è¨ˆç®—
+            //¶}©l­pºâ
             foreach (var currentPatientBaseddata in List_PatientBasedData)
             {
                 for (int i = 0; i < list_summarized_Patient_data.Count; i++)
                 {
                     if (currentPatientBaseddata.db_FirstAge < list_summarized_Patient_data[i].db_Age_Upper_Limit
-                        || i == list_summarized_Patient_data.Count - 1)  //å¹´é½¡åˆ†çµ„
+                        || i == list_summarized_Patient_data.Count - 1)  //¦~ÄÖ¤À²Õ
                     {
-                        //ä¸»è¨ºæ–·äººæ•¸
+                        //¥D¶EÂ_¤H¼Æ
                         list_summarized_Patient_data[i].int_Total_count++;
                         if (currentPatientBaseddata.str_Gender == "F")
                         {
@@ -247,7 +247,7 @@ namespace NHIRD.Actions
                         {
                             list_summarized_Patient_data[i].int_Male_count++;
                         }
-                        //æ¬¡è¨ºæ–·äººæ•¸
+                        //¦¸¶EÂ_¤H¼Æ
                         for (int j = 0; j < list_second_Diagnosis_Group.Count; j++)
                         {
                             if (currentPatientBaseddata.array_secondDiagnosis[j].str_postEventTime.Length > 0
@@ -269,12 +269,12 @@ namespace NHIRD.Actions
                 }
             }
         }
-        // -- è¼¸å‡ºPatient Based Data
+        // -- ¿é¥XPatient Based Data
         public static void Generate_Report(List<PatientBasedData> list_PatientBasedData, List<SecondDiagnosisGroup> list_second_Diagnosis_Group, string str_path)
         {
             using (var sw = new StreamWriter(str_path))
             {
-                string title = "ID\tBirthday\tGender\tåˆè¨ºæ—¥æœŸ\tåˆè¨ºå¹´é½¡\t07811 OPD times\t0781å©¦ç”¢æ³Œå°¿é–€è¨º OPD times";
+                string title = "ID\tBirthday\tGender\tªì¶E¤é´Á\tªì¶E¦~ÄÖ\t07811 OPD times\t0781°ü²£ªc§¿ªù¶E OPD times";
                 foreach (var secondDx in list_second_Diagnosis_Group)
                 {
                     title += "\t" + secondDx.str_name + ": FirstDate";
@@ -314,13 +314,13 @@ namespace NHIRD.Actions
                 sw.Flush();
             }
         }
-        // --è¼¸å‡ºSummarized Data
+        // --¿é¥XSummarized Data
         public static void Generate_Summary(List<SumData> list_summarized_Patient_data, List<SecondDiagnosisGroup> list_second_Diagnosis_Group, string str_path)
         {
             using (var sw = new StreamWriter(str_path))
             {
                 string title = "Patient Char.\t\t\t\t";
-                string subtitle = "Ageä¸‹ç•Œ\tAgeä¸Šç•Œ\tF\tM\tAll";
+                string subtitle = "Age¤U¬É\tAge¤W¬É\tF\tM\tAll";
                 foreach (var secondDxGroup in list_second_Diagnosis_Group)
                 {
                     title += "\t" + secondDxGroup.str_name + "\t\t\tIncidence\t\t";
@@ -335,7 +335,7 @@ namespace NHIRD.Actions
                     line += "\t" + current_Summarized_Patient_data.int_Female_count.NullforZero();
                     line += "\t" + current_Summarized_Patient_data.int_Male_count.NullforZero();
                     line += "\t" + current_Summarized_Patient_data.int_Total_count.NullforZero();
-                    int_Female_count_sum += current_Summarized_Patient_data.int_Female_count;   //SUMå°šæœªå®Œæˆ
+                    int_Female_count_sum += current_Summarized_Patient_data.int_Female_count;   //SUM©|¥¼§¹¦¨
                     int_Male_count_sum += current_Summarized_Patient_data.int_Male_count;
                     int_Total_count_sum += current_Summarized_Patient_data.int_Total_count;
                     for (int i = 0; i < current_Summarized_Patient_data.second_Diagnosis.Count(); i++)
@@ -352,13 +352,13 @@ namespace NHIRD.Actions
                 sw.Flush();
             }
         }
-        // -- è¼‰å…¥all patientç¸½è¡¨
+        // -- ¸ü¤Jall patientÁ`ªí
         public static void Load_All_Patient(List<SecondDiagnosisGroup> list_second_Diagnosis_Group,
             List<PatientBasedData_ID> List_PatientBasedData, string str_path)
         {
             using (var sr = new StreamReader(str_path))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_ID_index = title.FindIndex(x => x == "ID");
                 int int_Birthday_index = title.FindIndex(x => x.IndexOf("Birthday") >= 0);
@@ -366,7 +366,7 @@ namespace NHIRD.Actions
                 int int_First_Start_Date_index = title.FindIndex(x => x.IndexOf("First Start Date") >= 0);
                 int int_Last_Start_Date_index = title.FindIndex(x => x.IndexOf("Last Start Date") >= 0);
                 int int_Last_End_Date_index = title.FindIndex(x => x.IndexOf("Last End Date") >= 0);
-                //è¼‰å…¥è³‡æ–™
+                //¸ü¤J¸ê®Æ
                 while (sr.Peek() >= 0)
                 {
                     var currentlinesplit = sr.ReadLine().Split('\t');
@@ -386,7 +386,7 @@ namespace NHIRD.Actions
                 Console.WriteLine("\r - patients: {0} loaded", List_PatientBasedData.Count());
             }
         }
-        // -- å°‡all-patient åŠ å…¥ primary diagnosis
+        // -- ±Nall-patient ¥[¤J primary diagnosis
         public static void Load_PrimaryDiagnosis_to_All_Patient(
             List<SecondDiagnosisGroup> list_second_Diagnosis_Group,
             List<PatientBasedData_ID> List_PatientBasedData,
@@ -394,7 +394,7 @@ namespace NHIRD.Actions
         {
             using (var sr = new StreamReader(str_FilePath))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_ID_index = title.FindIndex(x => x == "ID");
                 int int_Birthday_index = title.FindIndex(x => x.IndexOf("ID_BIRTHDAY") >= 0);
@@ -402,7 +402,7 @@ namespace NHIRD.Actions
                 int int_Gender_index = title.FindIndex(x => x.IndexOf("ID_SEX") >= 0);
                 int int_ICD_index = title.FindIndex(x => x.IndexOf("ACODE_ICD9_1") >= 0);
                 int int_FuncType_index = title.FindIndex(x => x.IndexOf("FUNC_TYPE") >= 0);
-                // -- streamreader è¿´åœˆ
+                // -- streamreader °j°é
                 var int_error_count = 0;
                 while (sr.Peek() >= 0)
                 {
@@ -410,29 +410,29 @@ namespace NHIRD.Actions
                     string str_currentID = str_currentline_split[int_ID_index];
                     string str_currentBirthday = str_currentline_split[int_Birthday_index];
                     string str_currentFuncDate = str_currentline_split[int_FuncDate_index];
-                    if (Convert.ToInt32(str_currentFuncDate.Substring(0, 4)) < 2000) continue;  //***å¹´ä»½é™åˆ¶
-                    if (Convert.ToInt32(str_currentBirthday.Substring(0, 4)) < 2000) continue;  //***å¹´é½¡é™åˆ¶
+                    if (Convert.ToInt32(str_currentFuncDate.Substring(0, 4)) < 2000) continue;  //***¦~¥÷­­¨î
+                    if (Convert.ToInt32(str_currentBirthday.Substring(0, 4)) < 2000) continue;  //***¦~ÄÖ­­¨î
                     string str_currentGender = str_currentline_split[int_Gender_index];
                     string str_currentFuncType = str_currentline_split[int_FuncType_index];
                     string[] str_currentICDs = new string[] { str_currentline_split[int_ICD_index], str_currentline_split[int_ICD_index + 1], str_currentline_split[int_ICD_index + 2] };
-                    // ** æœå°‹
+                    // ** ·j´M
                     int int_BinarySearchResult = List_PatientBasedData
                         .BinarySearch(new PatientBasedData_ID(str_currentID, str_currentBirthday));
-                    if (int_BinarySearchResult < 0)   //æŸ¥ç„¡è³‡æ–™(éŒ¯èª¤)
+                    if (int_BinarySearchResult < 0)   //¬dµL¸ê®Æ(¿ù»~)
                     {
                         Console.Write("\rCan not find ID in All patient! :{0}", ++int_error_count);
                     }
-                    else   //èˆŠè³‡æ–™
+                    else   //ÂÂ¸ê®Æ
                     {
                         List_PatientBasedData[int_BinarySearchResult]
-                            .str_PrimaryDiagnosis_First_Date = str_currentFuncDate; //æ›´æ–°æœ€æ—©æ—¥æœŸ
-                        List_PatientBasedData[int_BinarySearchResult].str_Gender = str_currentGender;//æ ¡æ­£æ€§åˆ¥
+                            .str_PrimaryDiagnosis_First_Date = str_currentFuncDate; //§ó·s³Ì¦­¤é´Á
+                        List_PatientBasedData[int_BinarySearchResult].str_Gender = str_currentGender;//®Õ¥¿©Ê§O
                     }
                 }
                 Console.Write("\n");
             }
         }
-        // -- å°‡all-patient åŠ å…¥ Secondary diagnosis
+        // -- ±Nall-patient ¥[¤J Secondary diagnosis
         public static void Load_SecondaryDiagnosis_to_All_Patient(
             List<SecondDiagnosisGroup> list_second_Diagnosis_Group,
             List<PatientBasedData_ID> List_PatientBasedData,
@@ -441,24 +441,24 @@ namespace NHIRD.Actions
         {
             using (var sr = new StreamReader(str_FilePath))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_ID_index = title.FindIndex(x => x == "ID");
                 int int_Birthday_index = title.FindIndex(x => x.IndexOf("ID_BIRTHDAY") >= 0);
                 int int_InDate_index = title.FindIndex(x => x.IndexOf("IN_DATE") >= 0);
                 int int_Gender_index = title.FindIndex(x => x.IndexOf("ID_SEX") >= 0);
                 int int_ICD_index = title.FindIndex(x => x.IndexOf("ICD9CM_CODE") >= 0);
-                // -- srä¹‹è¿´åœˆ
+                // -- sr¤§°j°é
                 var int_error_count = 0;
                 while (sr.Peek() >= 0)
                 {
-                    // å»ºç«‹è©²è¡Œè³‡æ–™
+                    // «Ø¥ß¸Ó¦æ¸ê®Æ
                     string[] str_currentline_split = sr.ReadLine().Split('\t');
                     string str_currentID = str_currentline_split[int_ID_index];
                     string str_currentBirthday = str_currentline_split[int_Birthday_index];
                     string str_currentInDate = str_currentline_split[int_InDate_index];
-                    if (Convert.ToInt32(str_currentInDate.Substring(0, 4)) < 2000) continue;  //***å¹´ä»½é™åˆ¶
-                    if (Convert.ToInt32(str_currentBirthday.Substring(0, 4)) < 2000) continue;  //***å¹´é½¡é™åˆ¶
+                    if (Convert.ToInt32(str_currentInDate.Substring(0, 4)) < 2000) continue;  //***¦~¥÷­­¨î
+                    if (Convert.ToInt32(str_currentBirthday.Substring(0, 4)) < 2000) continue;  //***¦~ÄÖ­­¨î
                     string str_currentGender = str_currentline_split[int_Gender_index];
                     string[] str_currentICDs = new string[] { str_currentline_split[int_ICD_index],
                         str_currentline_split[int_ICD_index + 1], str_currentline_split[int_ICD_index + 2],
@@ -472,10 +472,10 @@ namespace NHIRD.Actions
                     }
                     else
                     {
-                        //å„çµ„æ¬¡è¦è¨ºæ–·çš„è¿´åœˆ
+                        //¦U²Õ¦¸­n¶EÂ_ªº°j°é
                         for (int i = 0; i < list_second_Diagnosis_Group.Count; i++)
                         {
-                            //   æ ¸å°è©²çµ„ICD  ç¬¦åˆçš„è©±æ›´æ–°ç—…äººçš„ç¬¬ä¸€æ¬¡è¨ºæ–·æ™‚é–“
+                            //   ®Ö¹ï¸Ó²ÕICD  ²Å¦Xªº¸Ü§ó·s¯f¤Hªº²Ä¤@¦¸¶EÂ_®É¶¡
                             if (int_BinarySearchResult >= 0 && check_ICD(list_second_Diagnosis_Group[i].list_ICD9, str_currentICDs))
                             {
                                 List_PatientBasedData[int_BinarySearchResult]
@@ -487,7 +487,7 @@ namespace NHIRD.Actions
                 Console.Write('\n');
             }
         }
-        // -- å°‡all-patient åŠ å…¥ Secondary diagnosis
+        // -- ±Nall-patient ¥[¤J Secondary diagnosis
         public static void Load_SecondaryCD_to_All_Patient(
             List<SecondDiagnosisGroup> list_second_Diagnosis_Group,
             List<PatientBasedData_ID> List_PatientBasedData,
@@ -496,23 +496,23 @@ namespace NHIRD.Actions
         {
             using (var sr = new StreamReader(str_FilePath))
             {
-                // -- å–å¾—æ¬„ä½index
+                // -- ¨ú±oÄæ¦ìindex
                 List<string> title = new List<string>(sr.ReadLine().Split('\t'));
                 int int_ID_index = title.FindIndex(x => x == "ID");
                 int int_Birthday_index = title.FindIndex(x => x.IndexOf("ID_BIRTHDAY") >= 0);
                 int int_InDate_index = title.FindIndex(x => x.IndexOf("FUNC_DATE") >= 0);
                 int int_Gender_index = title.FindIndex(x => x.IndexOf("ID_SEX") >= 0);
                 int int_ICD_index = title.FindIndex(x => x.IndexOf("ACODE_ICD9_1") >= 0);
-                // -- srä¹‹è¿´åœˆ
+                // -- sr¤§°j°é
                 var int_error_count = 0;
                 while (sr.Peek() >= 0)
                 {
-                    // å»ºç«‹è©²è¡Œè³‡æ–™
+                    // «Ø¥ß¸Ó¦æ¸ê®Æ
                     string[] str_currentline_split = sr.ReadLine().Split('\t');
                     string str_currentID = str_currentline_split[int_ID_index];
                     string str_currentBirthday = str_currentline_split[int_Birthday_index];
                     string str_currentInDate = str_currentline_split[int_InDate_index];
-                    if (Convert.ToInt32(str_currentInDate.Substring(0, 4)) < 2000) continue;  //***å¹´ä»½é™åˆ¶
+                    if (Convert.ToInt32(str_currentInDate.Substring(0, 4)) < 2000) continue;  //***¦~¥÷­­¨î
                     string str_currentGender = str_currentline_split[int_Gender_index];
                     string[] str_currentICDs = new string[] { str_currentline_split[int_ICD_index],
                         str_currentline_split[int_ICD_index + 1], str_currentline_split[int_ICD_index + 2] };
@@ -525,10 +525,10 @@ namespace NHIRD.Actions
                     }
                     else
                     {
-                        //å„çµ„æ¬¡è¦è¨ºæ–·çš„è¿´åœˆ
+                        //¦U²Õ¦¸­n¶EÂ_ªº°j°é
                         for (int i = 0; i < list_second_Diagnosis_Group.Count; i++)
                         {
-                            //   æ ¸å°è©²çµ„ICD  ç¬¦åˆçš„è©±æ›´æ–°ç—…äººçš„ç¬¬ä¸€æ¬¡è¨ºæ–·æ™‚é–“
+                            //   ®Ö¹ï¸Ó²ÕICD  ²Å¦Xªº¸Ü§ó·s¯f¤Hªº²Ä¤@¦¸¶EÂ_®É¶¡
                             if (int_BinarySearchResult >= 0 && check_ICD(list_second_Diagnosis_Group[i].list_ICD9, str_currentICDs))
                             {
                                 List_PatientBasedData[int_BinarySearchResult]
@@ -540,7 +540,7 @@ namespace NHIRD.Actions
                 Console.Write('\n');
             }
         }
-        // --è¼¸å‡º All Patient data
+        // --¿é¥X All Patient data
         public static void Generate_All_Patient(List<PatientBasedData_ID> list_PatientBasedData,
             List<SecondDiagnosisGroup> list_second_Diagnosis_Group,
             string str_path, bool studyGroupOnly, int int_data_start_year, int int_data_end_year)
@@ -570,7 +570,7 @@ namespace NHIRD.Actions
                 sw.Flush();
             }
         }
-        // --è¨ˆç®—Calculate_Age_Specific_Incidence
+        // --­pºâCalculate_Age_Specific_Incidence
         public static void Calculate_Age_Specific_Incidence(
             List<Age_Specific_Incidence> list_Age_specific_incidence,
             List<PatientBasedData_ID> list_PatientBasedData,
@@ -579,28 +579,28 @@ namespace NHIRD.Actions
             int int_data_start_year, int int_data_end_year
             )
         {
-            //åˆå§‹åŒ– ASIé™£åˆ—
+            //ªì©l¤Æ ASI°}¦C
             for (int i = 0; i < 100; i++)
             {
                 list_Age_specific_incidence.Add(
                     new Age_Specific_Incidence(i.ToString(), i, i + 1, list_second_Diagnosis_Group));
             }
-            //é–‹å§‹è¨ˆç®—Patient Based Data
+            //¶}©l­pºâPatient Based Data
             int int_patient_count = 0;
             foreach (var PatientBasedData in list_PatientBasedData)
             {
                 if ((IsStudyGroup && !PatientBasedData.IsStudyGroup))
-                    continue; //æª¢æŸ¥æ˜¯å¦åªéœ€study group
+                    continue; //ÀË¬d¬O§_¥u»İstudy group
 
                 double db_start_age = PatientBasedData.db_data_start_age(int_data_start_year, int_data_end_year);
                 double db_end_age = PatientBasedData.db_data_end_age(int_data_start_year, int_data_end_year);
                 double db_PrimaryDiagnosisAge = PatientBasedData.db_PrimaryDiagnosis_First_Age;
-                //study groupæ’é™¤è¨ºæ–·å‰çš„æ™‚é–“
+                //study group±Æ°£¶EÂ_«eªº®É¶¡
                 if (IsStudyGroup) db_start_age = Math.Max(db_PrimaryDiagnosisAge, db_start_age);
                 foreach (var Age_Specific_incidence in list_Age_specific_incidence)
                 {
-                    //æ­¤ASIç¾¤çµ„çš„å¹´é½¡ä¸Šç•Œï¼Œå¤§æ–¼ç—…äººè³‡æ–™é–‹å§‹å¹´é½¡ä¸”ä¸‹ç•Œå°æ–¼ç—…äººè³‡æ–™çµæŸå¹´é½¡ï¼ˆæœ‰é‡ç–Šï¼‰
-                    //è¨ˆç®—total patient year
+                    //¦¹ASI¸s²Õªº¦~ÄÖ¤W¬É¡A¤j©ó¯f¤H¸ê®Æ¶}©l¦~ÄÖ¥B¤U¬É¤p©ó¯f¤H¸ê®Æµ²§ô¦~ÄÖ¡]¦³­«Å|¡^
+                    //­pºâtotal patient year
                     if (Age_Specific_incidence.db_age_upperL > db_start_age &&
                         Age_Specific_incidence.db_age_lowerL <= db_end_age)
                     {
@@ -623,10 +623,10 @@ namespace NHIRD.Actions
                         }
                     }
                     else { continue; }
-                    //è¨ˆç®—ä¸»è¨ºæ–·
-                    if (PatientBasedData.IsStudyGroup)  //æ˜¯æ“æœ‰ä¸»è¨ºæ–·çš„case
+                    //­pºâ¥D¶EÂ_
+                    if (PatientBasedData.IsStudyGroup)  //¬O¾Ö¦³¥D¶EÂ_ªºcase
                     {
-                        //åˆ¤æ–·å¹´é½¡çµ„åˆ¥æ˜¯å¦æ­£ç¢º
+                        //§PÂ_¦~ÄÖ²Õ§O¬O§_¥¿½T
                         if (PatientBasedData.db_PrimaryDiagnosis_First_Age >= Age_Specific_incidence.db_age_lowerL
                             && PatientBasedData.db_PrimaryDiagnosis_First_Age < Age_Specific_incidence.db_age_upperL)
                         {
@@ -642,15 +642,15 @@ namespace NHIRD.Actions
                             }
                         }
                     }
-                    //æ¬¡è¨ºæ–·
+                    //¦¸¶EÂ_
                     for (int i = 0; i < Age_Specific_incidence.Secondary_Diagnosis.Length; i++)
                     {
                         double db_secondary_diagnosis_age = PatientBasedData.get_secondary_Diagnosis_Event_Age(i);
-                        //æ˜¯æ“æœ‰æ¬¡è¨ºæ–·çš„case   ã€‚  å¦‚æœæ˜¯study groupï¼Œæ¬¡è¨ºæ–·ä¸èƒ½æ¯”ä¸»è¨ºæ–·æ—©
+                        //¬O¾Ö¦³¦¸¶EÂ_ªºcase   ¡C  ¦pªG¬Ostudy group¡A¦¸¶EÂ_¤£¯à¤ñ¥D¶EÂ_¦­
                         if (PatientBasedData.secondary_Diagnosis[i].IsSecondaryDiagnosis
                             && !(IsStudyGroup && db_secondary_diagnosis_age < PatientBasedData.db_PrimaryDiagnosis_First_Age))
                         {
-                            //åˆ¤æ–·å¹´é½¡çµ„åˆ¥æ˜¯å¦æ­£ç¢º
+                            //§PÂ_¦~ÄÖ²Õ§O¬O§_¥¿½T
                             if (db_secondary_diagnosis_age >= Age_Specific_incidence.db_age_lowerL
                                 && db_secondary_diagnosis_age < Age_Specific_incidence.db_age_upperL)
                             {
@@ -675,7 +675,7 @@ namespace NHIRD.Actions
             }
             Console.Write("\n");
         }
-        // --è¼¸å‡ºASI
+        // --¿é¥XASI
         public static void Generate_ASI(List<Age_Specific_Incidence> list_Age_specific_incidence,
             List<SecondDiagnosisGroup> list_second_diagnosis_group,
             string str_path)
@@ -719,7 +719,7 @@ namespace NHIRD.Actions
                 sw.Flush();
             }
         }
-        // --è¨ˆç®—SIR
+        // --­pºâSIR
         public static void Calculate_SIR(
             List<SIR> list_SIR,
             List<Age_Specific_Incidence> list_Age_specific_incidence_AllPt,
@@ -727,19 +727,19 @@ namespace NHIRD.Actions
             List<SecondDiagnosisGroup> list_second_diagnosis_group
             )
         {
-            //åˆå§‹åŒ– SIR List
+            //ªì©l¤Æ SIR List
             foreach (var seconddx in list_second_diagnosis_group)
             {
                 list_SIR.Add(new SIR() { str_group_name = seconddx.str_name });
             }
             for (int i = 0; i < list_SIR.Count(); i++)
             {
-                //çµ±è¨ˆobserved count
+                //²Î­pobserved count
                 int int_observe_count = 0;
                 int int_observe_count_Male = 0;
                 int int_observe_count_Female = 0;
 
-                //å°‡study groupæ¯å€‹å¹´é½¡å±¤çš„è¨ºæ–·æ¬¡æ•¸ç›¸åŠ  = Observed count
+                //±Nstudy group¨C­Ó¦~ÄÖ¼hªº¶EÂ_¦¸¼Æ¬Û¥[ = Observed count
                 foreach (var ASI in list_Age_specific_incidence_StudyGroup)
                 {
                     int_observe_count += ASI.Secondary_Diagnosis[i].int_Event_count;
@@ -747,7 +747,7 @@ namespace NHIRD.Actions
                     int_observe_count_Female += ASI.Secondary_Diagnosis_Female[i].int_Event_count;
                 }
 
-                //çµ±è¨ˆestimate count = patient-year(Study) * Event(allPT) / patient-year(allPT)
+                //²Î­pestimate count = patient-year(Study) * Event(allPT) / patient-year(allPT)
                 double db_estimated_count = 0;
                 double db_estimated_count_Male = 0;
                 double db_estimated_count_Female = 0;
@@ -771,7 +771,7 @@ namespace NHIRD.Actions
                 list_SIR[i].db_estimated_Female = db_estimated_count_Female;
             }
         }
-        // --è¼¸å‡ºSIR
+        // --¿é¥XSIR
         public static void Generate_SIR(List<SIR> list_SIR, string str_path)
         {
             using (var sw = new StreamWriter(str_path))
@@ -808,7 +808,7 @@ namespace NHIRD.Actions
             }
         }
 
-        // -- (Private)æª¢æŸ¥ICDæ˜¯å¦å­˜åœ¨criteria Listä¸­
+        // -- (Private)ÀË¬dICD¬O§_¦s¦bcriteria List¤¤
         static bool check_ICD(IEnumerable<string> List_criteriaICD, IEnumerable<string> List_ICDtoExam)
         {
             foreach (string str_ICD in List_ICDtoExam)
